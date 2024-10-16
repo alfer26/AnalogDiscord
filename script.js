@@ -2,6 +2,7 @@ const socket = new WebSocket('ws://localhost:8081');
 
 let audioContext = null;
 let microphoneStream = null;
+let audioBufferPool = [];
 
 document.getElementById('join-call-button').addEventListener('click', () => {
     socket.send('join-call');
@@ -37,20 +38,22 @@ socket.onerror = (event) => {
 };
 
 function joinCall() {
-    navigator.mediaDevices.getUserMedia({ audio: true })
-        .then(stream => {
-            microphoneStream = stream;
-            audioContext = new AudioContext();
-            const source = audioContext.createMediaStreamSource(stream);
-            const gain = audioContext.createGain();
-            gain.gain.value = 1;
-            source.connect(gain);
-            gain.connect(audioContext.destination);
-            document.getElementById('leave-call-button').disabled = false;
-        })
-        .catch(error => {
-            console.error('Ошибка доступа к микрофону:', error);
-        });
+  console.log('Запрос доступа к микрофону...');
+  navigator.mediaDevices.getUserMedia({ audio: true })
+      .then(stream => {
+          microphoneStream = stream;
+          audioContext = new AudioContext();
+          const source = audioContext.createMediaStreamSource(stream);
+          const gain = audioContext.createGain();
+          gain.gain.value = 1;
+          source.connect(gain);
+          gain.connect(audioContext.destination);
+          document.getElementById('leave-call-button').disabled = false;
+          console.log('Подключение к звонку...');
+      })
+      .catch(error => {
+          console.error('Ошибка доступа к микрофону:', error);
+      });
 }
 
 function leaveCall() {
@@ -63,19 +66,31 @@ function leaveCall() {
         audioContext = null;
     }
     document.getElementById('leave-call-button').disabled = true;
+    console.log('Отключение от звонка...');
 }
 
 function handleAudioMessage(audioData) {
-    if (audioContext) {
-        const audioBuffer = new AudioBuffer({
-            length: audioData.length,
-            sampleRate: 44100,
-            numberOfChannels: 1
-        });
-        audioBuffer.getChannelData(0).set(new Float32Array(audioData));
-        const source = audioContext.createBufferSource();
-        source.buffer = audioBuffer;
-        source.connect(audioContext.destination);
-        source.start();
+    if (audioContext && audioContext.state === 'running') {
+        const audioBuffer = getAudioBufferFromPool();
+        if (audioBuffer) {
+            audioBuffer.getChannelData(0).set(new Float32Array(audioData));
+            const source = audioContext.createBufferSource();
+            source.buffer = audioBuffer;
+            source.connect(audioContext.destination);
+            source.start();
+            console.log('Воспроизведение аудиосообщения...');
+        } else {
+            console.error('Нет доступных аудиобуферов...');
+        }
+    } else {
+        console.error('Аудиоконтекст не доступен...');
+    }
+}
+
+function getAudioBufferFromPool() {
+    if (audioBufferPool.length > 0) {
+        return audioBufferPool.shift();
+    } else {
+        return null;
     }
 }
