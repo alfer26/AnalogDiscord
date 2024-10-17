@@ -14,6 +14,8 @@
     "vite": "^5.4.1"
   },
   "dependencies": {
+    "fs": "^0.0.1-security",
+    "https": "^1.0.0",
     "recorder-js": "^1.0.7",
     "ws": "^8.18.0"
   }

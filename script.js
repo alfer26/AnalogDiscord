@@ -277,7 +277,7 @@ let recorderNode;
 let socket;
 
 async function callJoin() {
-    socket = new WebSocket("ws://172.24.128.1:8080");
+    socket = new WebSocket("wss://172.24.128.1:8080");
 
     socket.addEventListener("open", () => {
         console.log("Соединение WebSocket установлено");

@@ -1,8 +1,14 @@
-const WebSocket = require("ws");
+const https = require('https');
+const WebSocket = require('ws');
+const fs = require('fs');
 
-const wss = new WebSocket.Server({ port: 8080 });
+// Загрузка SSL-сертификатов
+const server = https.createServer({
+    cert: fs.readFileSync('./cert.pem'),
+    key: fs.readFileSync('./key.pem')
+});
 
-console.log("Activate");
+const wss = new WebSocket.Server({ server });
 
 wss.on("connection", (ws) => {
     console.log("Пользователь подключился");
@@ -11,3 +17,8 @@ wss.on("connection", (ws) => {
         ws.send(message);
     });
 });
+
+server.listen(8080, () => {
+    console.log('Сервер запущен на https://localhost:8080');
+});
+
