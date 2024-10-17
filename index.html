@@ -1,48 +1,52 @@
 <!DOCTYPE html>
 <html lang="ru">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Общий звонок</title>
-    <style>
-        body {
-            font-family: Arial, sans-serif;
-        }
-        #call-container {
-            width: 80%;
-            margin: 40px auto;
-            padding: 20px;
-            border: 1px solid #ccc;
-            border-radius: 10px;
-            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-        }
-        #join-call-button {
-            background-color: #4CAF50;
-            color: #fff;
-            padding: 10px 20px;
-            border: none;
-            border-radius: 5px;
-            cursor: pointer;
-        }
-        #leave-call-button {
-            background-color: #FF69B4;
-            color: #fff;
-            padding: 10px 20px;
-            border: none;
-            border-radius: 5px;
-            cursor: pointer;
-        }
-    </style>
-</head>
-<body>
-    <div id="call-container">
-        <h2>Общий звонок</h2>
-        <button id="join-call-button">Присоединиться к звонку</button>
-        <button id="leave-call-button" disabled>Покинуть звонок</button>
-        <div id="status"></div>
-        <div id="call-log"></div>
-    </div>
-
-    <script src="script.js"></script>
-</body>
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <title>Общий звонок</title>
+        <style>
+            body {
+                font-family: Arial, sans-serif;
+            }
+            #callContainer {
+                width: 80%;
+                margin: 40px auto;
+                padding: 20px;
+                border: 1px solid #ccc;
+                border-radius: 10px;
+                box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            }
+            #joinButton {
+                background-color: #4caf50;
+                color: #fff;
+                padding: 10px 20px;
+                border: none;
+                border-radius: 5px;
+                cursor: pointer;
+            }
+            #leaveButton {
+                background-color: #ff69b4;
+                color: #fff;
+                padding: 10px 20px;
+                border: none;
+                border-radius: 5px;
+                cursor: pointer;
+            }
+        </style>
+    </head>
+    <body>
+        <section id="callContainer">
+            <h2>Общий звонок</h2>
+            <button id="joinButton">Присоединиться к звонку</button>
+            <button id="leaveButton">Покинуть звонок</button>
+            <div id="status"></div>
+            <div id="call-log"></div>
+        </section>
+        <section>
+            <div id="messagePlace"></div>
+            <input type="text" id="messageInput" />
+            <button id="sendMessage">Отправить</button>
+        </section>
+        <script src="script.js"></script>
+    </body>
 </html>
